@@ -10,7 +10,7 @@ It does **not** provide a graphical user interface (GUI).
 ## ⚙️ API Keys Configuration
 The services used in this project required API keys, except for OpenStreetMap. To use the project, follow this instructions:
 1. Create a file named `ApiKeys.java` in this folder 'src/main/java/com/viaggi/classes/'
-2. Copy the file 'APIKeys.java' content given here and insert your personal API keys:
+2. Copy the content of file 'APIKeys.java' given down here and insert your personal API keys:
 ```java
 package com.viaggi.classes;
 
