@@ -1,5 +1,6 @@
 package com.viaggi;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,22 +12,36 @@ import com.viaggi.classes.OpenWeatherMap.OpenWeatherMap;
 
 public class Main {
     public static void main(String[] args) {
+        //Variable scanner as user input
         Scanner scanner = new Scanner(System.in);
 
         try {
+            //List of strings to save the name of every city
             List<String> cities = new ArrayList<String>();
 
-            System.out.print("Insert the names of the cities separated with the comma: ");
+            System.out.print("Please, insert the names of the cities in your route separated with the comma: ");
             String input = scanner.nextLine();
             String[] fields = input.split(",");
 
+            //Adding the name of every city into the list
             for (String s : fields) {
-                cities.add(s);
+                cities.add(s.replaceFirst(" ", ""));
             }
 
-            double totalKm = 0;
+            //Printing the weather of every city
+            System.out.println("Here's the weather right now in every city you have mentioned in your route...");
+            for (int i = 0; i < cities.size(); i++) {
+                String name = cities.get(i);
+                OpenWeatherMap weather = APIManager.GetCityWeather(name);
+                System.out.println(name + " weather: " + weather.toString() + "\r\n");
+            }
+
+            //Printing the distances between the cities mentioned
+            System.out.println("And now, here's the distance between the cities which compose your route...");
+
+            int totalKm = 0;
             for (int i = 0; i < cities.size() - 1; i++) {
-                System.out.println("\r\nTravel n°" + (i + 1));
+                System.out.println("Stage n°" + (i + 1));
 
                 String departureName = cities.get(i), 
                     destinationName = cities.get(i + 1);
@@ -34,19 +49,14 @@ public class Main {
                 OpenStreetMap departure = APIManager.GetCityCoordinates(departureName),
                     destination = APIManager.GetCityCoordinates(destinationName);
 
-                OpenWeatherMap departureWeather = APIManager.GetCityWeather(departureName),
-                    destinationWeather = APIManager.GetCityWeather(destinationName);
-
                 OpenRouteService distance = APIManager.GetCitiesDistance(departure, destination);
 
-                System.out.println(departureName + " weather: " + departureWeather.toString());
-                System.out.println("\r\n" + destinationName + " weather: " + destinationWeather.toString());
-                System.out.println("\r\nDistance " + departureName + "-" + destinationName + " : " + distance.toString() + " km\r\n");
-
+                System.out.println(departureName + " - " + destinationName + ": " + distance.toString() + " km\r\n");
                 totalKm += Double.parseDouble(distance.toString());
             }
 
-            System.out.println("\r\nTotal of km: " + Math.round(totalKm) + " km");
+            //Printing the sum of all the kilometers made by doing this travel
+            System.out.println("The total of kilometers you will made by doing this travel are " + totalKm + " km");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -54,18 +64,3 @@ public class Main {
         }
     }
 }
-
-/*
-    Creare in Java un programma cli che dia la possibilità di gestire le tappe per un viaggio "concatenato":
-    l'utente deve inserire le tappe che vuole visitare in ordine ( ad esempio Mariano comense, Milano, Torino, Genova, Savona ) 
-    al termine dell'inserimento, l'utente dovrà visualizzare: 
-        - km di strada tra una tappa e l'altra 
-        - condizioni meteo generali della giornata in quella città ( meteo, temp min e max )
-        - km totali del viaggio
-
-    usare i servizi:
-        openrouteservice: https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/get
-        meteo:  https://openweathermap.org
-        openStreetMap: https://nominatim.openstreetmap.org/search?q=RICERCA&format=json&addressdetails=1
-        modificare il campo "ricerca" passando una stringa da cercare ( tipo: "mariano comense" o "seregno" )
- */

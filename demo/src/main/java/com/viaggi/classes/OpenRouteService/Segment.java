@@ -10,7 +10,7 @@ public class Segment {
 
     @Override
     public String toString() {
-        return String.valueOf(Math.round(this.distance));
+        return String.valueOf(Math.round(this.distance / 1000));
     }
 
     public double getDistance() {

@@ -11,8 +11,8 @@ public class MainCondition {
     @Override
     public String toString() {
         String ret = "";
-        ret += "min temp: " + Math.round(this.temp_min) + "\r\n";
-        ret += "max temp: " + Math.round(this.temp_max);
+        ret += "min temp: " + Math.round(this.temp_min) + "°C\r\n";
+        ret += "max temp: " + Math.round(this.temp_max) + "°C";
         return ret;
     }
 
